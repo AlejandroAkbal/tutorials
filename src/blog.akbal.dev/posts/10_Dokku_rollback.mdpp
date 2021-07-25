@@ -1,0 +1,90 @@
+<!--
+Title: How to rollback a Dokku deployment
+Tags: tutorial, beginners, dokku, docker, git
+-->
+
+# Introduction
+
+Sometimes you end up deploying an application to Dokku and then realize that you want to revert the changes you made.
+
+In this tutorial we'll go over how to roll back a Dokku deployment.
+
+---
+
+## Before we start
+
+### Preface
+
+Keep in mind that rolling back a deployment is a dangerous operation, proceed with caution.
+
+### Requirements
+
+- Dokku server
+
+Don't have a Dokku server?
+Check out my [Dokku tutorial](https://blog.akbal.dev/create-your-own-heroku-with-dokku-on-digitalocean).
+
+---
+
+### Get the commit hash
+
+First well need to get the hash of the commit that we want to roll back to.
+
+To accomplish that, list out the last 10 commits that have been made to the repository.
+
+```bash
+git log --pretty=format:"%h - %s" -10
+```
+
+You will get an output similar to this:
+
+```bash
+3cacb03 - Revert "build: broaden possible purged files"
+25e3b2b - chore: move node dependency to dev dependencies
+6a42416 - Revert "ci: run npm "build" script in predeploy stage"
+0b53fdd - ci: execute php buildpack first
+2d27d60 - ci: run npm "build" script in predeploy stage
+1bc1276 - build: broaden possible purged files
+1bed300 - style: lint
+5ab255c - Revert "build: only run tailwind JIT mode on local"
+23b0c4b - build: fix data-tables styles getting purged
+52ca32e - ci: move scripts back to app.json
+```
+
+Now copy the hash of the commit that you want to roll back to.
+For example `2d27d60`.
+
+---
+
+## How to rollback
+
+Now that we have the commit hash, we can roll back to it.
+
+Just force push to Dokku with the commit hash, instead of the local branch.
+
+```bash
+# git push --force <remote> <local branch>:<remote branch>
+git push --force dokku de7fc85:master
+```
+
+**That is it!**
+Now Dokku will build the application from that commit.
+Effectively rolling back to that commit.
+
+---
+
+## End
+
+That was easy, wasn't it?
+
+<!-- INCLUDE -->
+
+!INCLUDE "./src/blog.akbal.dev/include/self_promotion.md", 2
+
+<!-- /INCLUDE -->
+
+### Conclusion
+
+Congratulations, today you have learned how to roll back a Dokku deployment.
+
+**Let me know if the tutorial was useful to you in the comments!**
